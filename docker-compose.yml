@@ -1,0 +1,27 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "80:80"
+    depends_on: [backend]
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://db:3306/game_db
+      DB_USER: gameuser
+      DB_PASSWORD: gamepass
+    depends_on: [db]
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: game_db
+      MYSQL_USER: gameuser
+      MYSQL_PASSWORD: gamepass
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes: [dbdata:/var/lib/mysql]
+volumes:
+  dbdata:
